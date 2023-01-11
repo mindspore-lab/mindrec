@@ -1,0 +1,65 @@
+# argparse_init 'WideDeep'
+device_target: Ascend
+data_path: "./data/mindrecord"
+epochs: 15
+full_batch: False
+batch_size: 16000
+eval_batch_size: 16000
+field_size: 39
+vocab_size: 200000
+vocab_cache_size: 0
+emb_dim: 80
+deep_layer_dim: [1024, 512, 256, 128]
+deep_layer_act: 'relu'
+keep_prob: 1.0
+dropout_flag: False
+use_mixed_precision: True
+ckpt_path: "./ckpt"
+stra_ckpt: "./checkpoints"
+eval_file_name: "eval.log"
+loss_file_name: "loss.log"
+dataset_type: "mindrecord"
+parameter_server: 0
+field_slice: False
+sparse: False
+dynamic_embedding: False
+deep_table_slice_mode: "column_slice"
+
+weight_bias_init: ['normal', 'normal']
+emb_init: 'normal'
+init_args: [-0.01, 0.01]
+l2_coef: 0.00008 # 8e-5
+manual_shape: None
+
+---
+# Config description for each option
+data_path: 'Dataset path for local'
+device_target: "device target, support Ascend, GPU and CPU."
+epochs: "Total train epochs"
+batch_size: "batch size"
+full_batch: "Enable loading the full batch"
+eval_batch_size: "Eval batch size."
+field_size: "The number of features."
+vocab_size: "The total features of dataset."
+vocab_cache_size: "The total features of hash table."
+
+ckpt_path: 'Checkpoint path'
+eval_file_name: 'Auc log file path. Default: "./auc.log"'
+loss_file_name: 'Loss log file path. Default: "./loss.log"'
+dataset_type: "tfrecord/mindrecord/hd5"
+
+parameter_server: "Open parameter server of not"
+field_slice: "Enable split field mode or not"
+sparse: "Enable sparse or not"
+dynamic_embedding: "Enable dynamic embedding to use hash table."
+deep_table_slice_mode: "column_slice/row_slice"
+emb_dim: "The dense embedding dimension of sparse feature."
+deep_layer_dim: "The dimension of all deep layers."
+deep_layer_act: "The activation function of all deep layers."
+keep_prob: "The keep rate in dropout layer."
+dropout_flag: "Enable dropout"
+stra_ckpt: "The strategy checkpoint file."
+
+---
+device_target: ['Ascend', 'GPU']
+dataset_type: ["tfrecord", "mindrecord", "hd5"]
