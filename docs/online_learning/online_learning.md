@@ -117,8 +117,8 @@ kafka_client只需要启动一次，可以使用Kafka设置topic对应的partiti
    yrctl start --master  --address $MASTER_HOST_IP  
    
    # 参数说明
-   --master： 表示当前host为master节点，非master节点不用指定‘--master’参数
-   --address： master节点的ip
+   # --master： 表示当前host为master节点，非master节点不用指定‘--master’参数
+   # --address： master节点的ip
    ```
 
 ### 启动数据producer
@@ -129,19 +129,20 @@ kafka_client只需要启动一次，可以使用Kafka设置topic对应的partiti
 
    ```bash
    python producer.py
-   参数说明
-   --file1： 文件1路径
-   --file2： 文件2路径
-   上述文件均为criteo原始数据集文本文件，file1和file2可以被并发处理，file1和file2可以相同也可以不同，如果相同则每个样本相当于被使用两次。
+   
+   # 参数说明
+   # --file1： criteo数据集在本地磁盘的存放路径
+   # --file2： criteo数据集在本地磁盘的存放路径
+   # 上述文件均为criteo原始数据集文本文件，file1和file2可以被并发处理，file1和file2可以相同也可以不同，如果相同则相当于文件中每个样本被使用两次。
    ```
 
 ### 启动数据consumer
 
    consumer既是Kafka消费者，同时也是sender，将处理好的data frame放入MindPandas.channel中，channel详情请参考:[MindPandas](https://gitee.com/mindspore/mindpandas)，
-   consumer为criteo数据集进行特征工程需要3个数据集相关文件: `all_val_max_dict.pkl`, `all_val_min_dict.pkl`, `cat2id_dict.pkl`, `$PATH_TO_VAL_MAX_DICT`, `$PATH_TO_CAT_TO_ID_DICT`, `$PATH_TO_VAL_MAP_DICT` 分别为这些文件在环境上的绝对路径。这3个pkl文件具体生产方法可以参考[process_data.py](../../datasets/criteo_1tb/process_data.py)，对原始criteo数据集做转换生产对应的.pkl文件。
+   consumer为criteo数据集进行特征工程需要3个数据集相关文件: `all_val_max_dict.pkl`、 `all_val_min_dict.pkl`和`cat2id_dict.pkl`。`$PATH_TO_VAL_MAX_DICT`、 `$PATH_TO_VAL_MIN_DICT`和`$PATH_TO_CAT_TO_ID_DICT` 分别为这些文件在环境上的绝对路径。这3个pkl文件具体生产方法可以参考[process_data.py](../../datasets/criteo_1tb/process_data.py)，对原始criteo数据集做转换生产对应的.pkl文件。
 
    ```bash
-   python consumer.py  --num_shards=$DEVICE_NUM  --address=$LOCAL_HOST_IP  --max_dict=$PATH_TO_VAL_MAX_DICT  --min_dict=$PATH_TO_CAT_TO_ID_DICT  --map_dict=$PATH_TO_VAL_MAP_DICT
+   python consumer.py  --num_shards=$DEVICE_NUM  --address=$LOCAL_HOST_IP  --max_dict=$PATH_TO_VAL_MAX_DICT  --min_dict=$PATH_TO_VAL_MIN_DICT  --map_dict=$PATH_TO_CAT_TO_ID_DICT
    ```
 文件路径参数:
 
@@ -197,9 +198,9 @@ MindPandas channel.DataSender相关参数：
    ```bash
    python online_train.py --address=$LOCAL_HOST_IP   --dataset_name=criteo 
    
-   #参数说明：
-   --address： 本机host ip，从MindPandas接收训练数据需要配置
-   --dataset_name： 数据集名字，和consumer模块保持一致
+   # 参数说明：
+   # --address： 本机host ip，从MindPandas接收训练数据需要配置
+   # --dataset_name： 数据集名字，和consumer模块保持一致
    ```
 
    多卡训练MPI方式启动：
@@ -207,9 +208,9 @@ MindPandas channel.DataSender相关参数：
    ```bash
    bash mpirun_dist_online_train.sh [$RANK_SIZE] [$LOCAL_HOST_IP]
    
-   #参数说明：
-   RANK_SIZE：多卡训练卡数量
-   LOCAL_HOST_IP：本机host ip，用于MindPandas接收训练数据
+   # 参数说明：
+   # RANK_SIZE：多卡训练卡数量
+   # LOCAL_HOST_IP：本机host ip，用于MindPandas接收训练数据
    ```
 
 
@@ -218,9 +219,9 @@ MindPandas channel.DataSender相关参数：
    ```bash
    bash run_dist_online_train.sh [$WORKER_NUM] [$SHED_HOST] [$SCHED_PORT] [$LOCAL_HOST_IP]
    
-   #参数说明：
-   WORKER_NUM：多卡训练卡数量
-   SHED_HOST：MindSpore动态组网需要的Scheduler 角色的IP
-   SCHED_PORT：MindSpore动态组网需要的Scheduler 角色的Port
-   LOCAL_HOST_IP：本机host ip，从MindPandas接收训练数据需要配置
+   # 参数说明：
+   # WORKER_NUM：多卡训练卡数量
+   # SHED_HOST：MindSpore动态组网需要的Scheduler 角色的IP
+   # SCHED_PORT：MindSpore动态组网需要的Scheduler 角色的Port
+   # LOCAL_HOST_IP：本机host ip，从MindPandas接收训练数据需要配置
    ```
