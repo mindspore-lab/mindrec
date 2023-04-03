@@ -13,6 +13,8 @@
 # limitations under the License.
 # ============================================================================
 
+"""MindSpore Recommender Operators."""
+
 from mindspore_rec.ops.embedding import HashEmbeddingLookup
 
 __all__ = ["HashEmbeddingLookup"]
