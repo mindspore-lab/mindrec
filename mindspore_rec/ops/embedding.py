@@ -113,7 +113,7 @@ class HashEmbeddingLookup(Cell):
         self.reshape = P.Reshape()
         self.unique = P.Unique()
         self.shape = P.Shape()
-
+        aAAs =  ''
         self.embedding_table.unique = self.forward_unique
 
         self.max_norm = max_norm
