@@ -114,6 +114,7 @@ class HashEmbeddingLookup(Cell):
         self.unique = P.Unique()
         self.shape = P.Shape()
         aAAs =  ''
+        aAAss =  ''
         self.embedding_table.unique = self.forward_unique
 
         self.max_norm = max_norm
