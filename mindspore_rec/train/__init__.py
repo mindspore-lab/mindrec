@@ -13,6 +13,8 @@
 # limitations under the License.
 # ============================================================================
 
+"""MindSpore Recommender RecModel API."""
+
 from mindspore_rec.train.rec_model import RecModel
 
 __all__ = ["RecModel"]

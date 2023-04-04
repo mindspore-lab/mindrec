@@ -13,14 +13,23 @@
 # limitations under the License.
 # ============================================================================
 
+"""MindSpore Recommender RecModel API."""
+
 import sys
+
+import numpy as np
 from mindspore import Model
-from mindspore import nn
+from mindspore import _checkparam as Validator
 from mindspore import context
-from mindspore.parallel._utils import _device_number_check
-from mindspore._checkparam import Validator
-from mindspore.train.callback import _InternalCallbackParam, RunContext, _CallbackManager
 from mindspore import log as logger
+from mindspore import nn
+from mindspore.parallel._utils import _device_number_check
+from mindspore.train.callback import (
+    RunContext,
+    _CallbackManager,
+    _InternalCallbackParam,
+)
+
 
 class RecModel(Model):
     """
@@ -84,14 +93,31 @@ class RecModel(Model):
             boost_config_dict.
     """
 
-    def __init__(self, network, loss_fn=None, optimizer=None, metrics=None, eval_network=None,
-                 eval_indexes=None, amp_level="O0", boost_level="O0"):
-        super(RecModel, self).__init__(network=network, loss_fn=loss_fn, optimizer=optimizer, metrics=metrics,
-                                       eval_network=eval_network, eval_indexes=eval_indexes, amp_level=amp_level,
-                                       boost_level=boost_level)
+    def __init__(
+        self,
+        network,
+        loss_fn=None,
+        optimizer=None,
+        metrics=None,
+        eval_network=None,
+        eval_indexes=None,
+        amp_level="O0",
+        boost_level="O0",
+    ):
+        super().__init__(
+            network=network,
+            loss_fn=loss_fn,
+            optimizer=optimizer,
+            metrics=metrics,
+            eval_network=eval_network,
+            eval_indexes=eval_indexes,
+            amp_level=amp_level,
+            boost_level=boost_level,
+        )
 
-
-    def online_train(self, train_dataset, callbacks=None, dataset_sink_mode=True, sink_size=1):
+    def online_train(
+        self, train_dataset, callbacks=None, dataset_sink_mode=True, sink_size=1
+    ):
         """
         Online training API for recommend model.
 
@@ -125,7 +151,9 @@ class RecModel(Model):
         """
         Validator.check_bool(dataset_sink_mode)
         if isinstance(self._train_network, nn.GraphCell) and dataset_sink_mode:
-            raise ValueError("Dataset sink mode is currently not supported when training with a GraphCell.")
+            raise ValueError(
+                "Dataset sink mode is currently not supported when training with a GraphCell."
+            )
 
         _device_number_check(self._parallel_mode, self._device_number)
 
@@ -145,16 +173,25 @@ class RecModel(Model):
         with _CallbackManager(callbacks) as list_callback:
             self._check_reuse_dataset(train_dataset)
             if not dataset_sink_mode:
-                self._online_train_dataset_not_sink(train_dataset, list_callback, cb_params)
+                self._online_train_dataset_not_sink(
+                    train_dataset, list_callback, cb_params
+                )
             elif context.get_context("device_target") == "CPU":
-                logger.info("The CPU doesn't support dataset sink mode currently,"
-                            "so the training process will be performed with dataset not sink.")
-                self._online_train_dataset_not_sink(train_dataset, list_callback, cb_params)
+                logger.info(
+                    "The CPU doesn't support dataset sink mode currently,"
+                    "so the training process will be performed with dataset not sink."
+                )
+                self._online_train_dataset_not_sink(
+                    train_dataset, list_callback, cb_params
+                )
             else:
-                self._online_train_dataset_sink(train_dataset, list_callback, cb_params, sink_size)
+                self._online_train_dataset_sink(
+                    train_dataset, list_callback, cb_params, sink_size
+                )
 
-
-    def _online_train_dataset_not_sink(self, train_dataset, callbacks=None, cb_params=None):
+    def _online_train_dataset_not_sink(
+        self, train_dataset, callbacks=None, cb_params=None
+    ):
         """
         Training process for feed mode. The train input data would be passed to network directly.
 
@@ -167,10 +204,9 @@ class RecModel(Model):
             callbacks (Callback): Executor of callback list. Default: None.
             cb_params (_InternalCallbackParam): Callback parameters. Default: None.
         """
-        dataset_helper, _ = self._exec_preprocess(is_train=True,
-                                                  dataset=train_dataset,
-                                                  dataset_sink_mode=False,
-                                                  epoch_num=-1)
+        dataset_helper, _ = self._exec_preprocess(
+            is_train=True, dataset=train_dataset, dataset_sink_mode=False, epoch_num=-1
+        )
 
         cb_params.cur_epoch_num = 0
         cb_params.cur_step_num = 0
@@ -195,7 +231,10 @@ class RecModel(Model):
                 cb_params.net_outputs = outputs
 
                 # Handle loss scale.
-                if self._loss_scale_manager and self._loss_scale_manager.get_drop_overflow_update():
+                if (
+                    self._loss_scale_manager
+                    and self._loss_scale_manager.get_drop_overflow_update()
+                ):
                     _, overflow, _ = outputs
                     overflow = np.all(overflow.asnumpy())
                     self._loss_scale_manager.update_loss_scale(overflow)
@@ -209,7 +248,9 @@ class RecModel(Model):
 
         callbacks.on_train_end(run_context)
 
-    def _online_train_dataset_sink(self, train_dataset, callbacks=None, cb_params=None, sink_size=1):
+    def _online_train_dataset_sink(
+        self, train_dataset, callbacks=None, cb_params=None, sink_size=1
+    ):
         """
         Training process for data sink mode. The data would be passed to network through dataset channel.
 
@@ -225,7 +266,9 @@ class RecModel(Model):
         """
         sink_size = Validator.check_positive_int(sink_size)
         if sink_size != 1:
-            raise ValueError(f"The sink_size parameter only support value of 1 currently, but got: {sink_size}")
+            raise ValueError(
+                f"The sink_size parameter only support value of 1 currently, but got: {sink_size}"
+            )
 
         cb_params.cur_step_num = 0
         cb_params.dataset_sink_mode = True
@@ -233,21 +276,24 @@ class RecModel(Model):
 
         callbacks.on_train_begin(run_context)
         dataset_helper = None
-        if hasattr(train_dataset, '_dataset_helper'):
+        if hasattr(train_dataset, "_dataset_helper"):
+            # pylint: disable=W0212
             dataset_helper = train_dataset._dataset_helper
-    
+
         max_epoch = sys.maxsize
         # Epoch iteration
         for epoch_iter in range(max_epoch):
-            cb_params.cur_epoch_num = epoch_iter + 1 
+            cb_params.cur_epoch_num = epoch_iter + 1
 
             callbacks.on_train_epoch_begin(run_context)
-            dataset_helper, train_network = self._exec_preprocess(is_train=True,
-                                                                  dataset=train_dataset,
-                                                                  dataset_sink_mode=True,
-                                                                  sink_size=sink_size,
-                                                                  epoch_num=-1,
-                                                                  dataset_helper=dataset_helper)
+            dataset_helper, train_network = self._exec_preprocess(
+                is_train=True,
+                dataset=train_dataset,
+                dataset_sink_mode=True,
+                sink_size=sink_size,
+                epoch_num=-1,
+                dataset_helper=dataset_helper,
+            )
             cb_params.train_network = train_network
 
             # Train sink_size batchs once.
@@ -258,6 +304,6 @@ class RecModel(Model):
                 outputs = train_network(*inputs)
                 cb_params.net_outputs = outputs
                 callbacks.on_train_step_end(run_context)
-    
+
             callbacks.on_train_epoch_end(run_context)
         callbacks.on_train_end(run_context)
