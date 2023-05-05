@@ -143,6 +143,15 @@ bash scripts/run_parameter_server_standalone_train.sh 5 "GPU" ./data/mindrecord 
 
 Ascend环境只需要将DEVICE_TARGET参数指定为"Ascend"即可。
 
+如果设备host内存和磁盘空间足够，该模式可以实现单Ascend/GPU训练TB级别推荐模型, 可以直接使用scripts/run_parameter_server_standalone_train_terabyte_scale_model.sh脚本进行训练：
+```bash
+bash scripts/run_parameter_server_standalone_train_terabyte_scale_model.sh EPOCHS DEVICE_TARGET DATASET SERVER_NUM SCHED_HOST SCHED_PORT VOCAB_CACHE_SIZE [DEVICE_ID]
+```
+训练大模型需要导出环境变量`MS_EMBEDDING_REMOTE_CACHE_MEMORY_SIZE`，来约束remote(server)侧最大允许使用的内存大小，超出部分自动落盘。如最大允许使用10GB主存，可如下导出环境变量：
+```bash
+export MS_EMBEDDING_REMOTE_CACHE_MEMORY_SIZE=10
+```
+run_parameter_server_standalone_train_terabyte_scale_model.sh脚本中默认设置的MS_EMBEDDING_REMOTE_CACHE_MEMORY_SIZE值为10GB，可以根据环境配置进行调整，该值越大，训练性能越好。
 
 **GPU 8卡**：
 
@@ -151,7 +160,7 @@ bash scripts/run_parameter_server_distribute_train.sh RANK_SIZE EPOCHS DEVICE_TA
 ```
 如：
 ```bash
-bash scripts/run_parameter_server_distribute_train.sh 8 5 "GPU" ./data/mindrecord 1 127.0.0.1 2898 1000000 
+bash scripts/run_parameter_server_distribute_train.sh 8 5 "GPU" ./data/mindrecord 1 127.0.0.1 2898 1000000
 ```
 表示在GPU 8卡环境上执行5个epoch训练，Embedding Cache Size为1000000，1个Server，Scheduler的ip和port分别是127.0.0.1、2898, 训练日志保存在./worker_*/内。
 
