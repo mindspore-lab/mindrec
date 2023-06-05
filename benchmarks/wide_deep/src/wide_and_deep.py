@@ -271,8 +271,6 @@ class WideDeepModel(nn.Cell):
                     vocab_cache_size=config.vocab_cache_size,
                 )
             self.embedding_table = self.deep_embeddinglookup.embedding_table
-            self.deep_embeddinglookup.embedding_table.set_param_ps()
-            self.wide_embeddinglookup.embedding_table.set_param_ps()
         else:
             self.deep_embeddinglookup = nn.EmbeddingLookup(
                 config.vocab_size,
