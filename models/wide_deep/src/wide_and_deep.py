@@ -265,8 +265,6 @@ class WideDeepModel(nn.Cell):
                     )
 
             self.embedding_table = self.deep_embeddinglookup.embedding_table
-            self.deep_embeddinglookup.embedding_table.set_param_ps()
-            self.wide_embeddinglookup.embedding_table.set_param_ps()
         else:
             if dynamic_embedding:
                 # Dynamic embedding mode with hash embedding table.
