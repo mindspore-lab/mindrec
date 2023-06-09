@@ -75,6 +75,34 @@ MindRec是昇思MindSpore在推荐领域的高性能加速库，提供了推荐�
 </table>
 
 
+模型脚本及训练精度见下表：
+
+<table align="center">
+    <tr>
+        <th align="center">model</th>
+        <th  align="center">dataset</th>
+        <th  align="center">auc</th>
+        <th  align="center">mindrec recipe</th>
+        <th  align="center">vanilla mindspore</th>
+    </tr>
+    <tr>
+        <td align="center">Wide&Deep</td>
+        <td align="center">Criteo</td>
+        <td align="center">0.8</td>
+        <td align="center"><a href="https://github.com/mindspore-lab/mindrec/tree/master/models/wide_deep">link</td>
+        <td align="center"><a href="https://gitee.com/mindspore/models/tree/master/official/recommend/Wide_and_Deep">link</td>
+    </tr>
+    <tr>
+        <td align="center">Deep&Cross Network (DCN)</td>
+        <td align="center">Criteo</td>
+        <td align="center">0.8</td>
+        <td align="center"><a href="https://github.com/mindspore-lab/mindrec/tree/master/models/deep_and_cross">link</td>
+        <td align="center"><a href="https://gitee.com/mindspore/models/tree/master/research/recommend/deep_and_cross">link</td>
+    </tr>
+</table>
+
+
+
 ### 编译安装
 
 安装MindRec前，请先安装**MindSpore**，具体详见[MindSpore安装指南](https://mindspore.cn/install)。
@@ -156,7 +184,7 @@ class DemoNet(nn.Cell):
         )
 
     def construct(self, key, val):
-        
+
         # Insert a key-val pair.
         self.map[key] = val
 
@@ -194,8 +222,8 @@ from mindpandas.channel import DataReceiver
 from mindspore_rec import RecModel as Model
 
 # Prepare the realtime dataset.
-receiver = DataReceiver(address=config.address, 
-                        namespace=config.namespace, 
+receiver = DataReceiver(address=config.address,
+                        namespace=config.namespace,
                         dataset_name=config.dataset_name, shard_id=0)
 stream_dataset = StreamingDataset(receiver)
 
@@ -212,8 +240,8 @@ ckpt_config = CheckpointConfig(save_checkpoint_steps=100, keep_checkpoint_max=5)
 ckpt_cb = ModelCheckpoint(prefix="train", directory="./ckpt", config=ckpt_config)
 
 # Start the online training process.
-model.online_train(dataset, 
-                   callbacks=[TimeMonitor(1), callback, ckpt_cb], 
+model.online_train(dataset,
+                   callbacks=[TimeMonitor(1), callback, ckpt_cb],
                    dataset_sink_mode=True)
 ```
 
