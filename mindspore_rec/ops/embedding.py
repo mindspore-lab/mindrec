@@ -127,6 +127,7 @@ class HashEmbeddingLookup(Cell):
                 vocab_cache_size=vocab_cache_size,
             )
             self.embedding_table = self.embedding_lookup.embedding_table
+            _set_sparse_format(True)
         else:
             self.forward_unique = sparse
             self.embedding_size = validator.check_positive_int(
