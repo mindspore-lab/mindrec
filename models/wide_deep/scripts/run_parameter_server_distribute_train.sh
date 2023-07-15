@@ -14,7 +14,7 @@
 # limitations under the License.
 # ============================================================================
 
-echo "Usage: bash run_parameter_server_distribute_train.sh RANK_SIZE EPOCHS DEVICE_TARGET DATASET 
+echo "Usage: bash run_parameter_server_distribute_train.sh RANK_SIZE EPOCHS DEVICE_TARGET DATASET
                                               SERVER_NUM SCHED_HOST SCHED_PORT
                                               VOCAB_CACHE_SIZE [RANK_TABLE_FILE]
       RANK_TABLE_FILE is optional and only need on Ascend platform"
@@ -68,6 +68,5 @@ do
   export DEVICE_ID=$i
   python -s ${self_path}/../train_and_eval_parameter_server_distribute.py                     \
     --device_target=$DEVICE_TARGET --data_path=$DATASET --epochs=$EPOCHS --parameter_server=1 \
-    --vocab_cache_size=$VOCAB_CACHE_SIZE --dropout_flag=True >worker_$i.log 2>&1 &
+    --vocab_cache_size=$VOCAB_CACHE_SIZE --dropout_flag=False >worker_$i.log 2>&1 &
 done
-
