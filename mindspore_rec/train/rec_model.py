@@ -51,11 +51,11 @@ class RecModel(Model):
                              `eval_network`. In this case, the loss value will be passed to the `Loss` metric, the
                              predicted value and label will be passed to other metrics.
                              `mindspore.train.Metric.set_indexes
-                             <https://www.mindspore.cn/docs/en/master/api_python/train/mindspore.train.Metric.html?#mindspore.train.Metric.set_indexes>`_
+                             <https://www.mindspore.cn/docs/en/r2.1/api_python/train/mindspore.train.Metric.html?#mindspore.train.Metric.set_indexes>`_
                              is recommended instead of `eval_indexes`.
                              Default: None.
         amp_level (str): Option for argument `level` in `mindspore.amp.build_train_network
-            <https://www.mindspore.cn/docs/en/master/api_python/amp/mindspore.amp.build_train_network.html>`_,
+            <https://www.mindspore.cn/docs/en/r2.1/api_python/amp/mindspore.amp.build_train_network.html>`_,
             level for mixed precision training. Supports ["O0", "O2", "O3", "auto"]. Default: "O0".
 
             - "O0": Do not change.
@@ -69,9 +69,9 @@ class RecModel(Model):
             The BatchNorm strategy can be changed by `keep_batchnorm_fp32` settings in `kwargs`. `keep_batchnorm_fp32`
             must be a bool. The loss scale strategy can be changed by `loss_scale_manager` setting in `kwargs`.
             `loss_scale_manager` should be a subclass of `mindspore.amp.LossScaleManager
-            <https://www.mindspore.cn/docs/en/master/api_python/amp/mindspore.amp.LossScaleManager.html>`_.
+            <https://www.mindspore.cn/docs/en/r2.1/api_python/amp/mindspore.amp.LossScaleManager.html>`_.
             The more detailed explanation of `amp_level` setting can be found at `mindspore.amp.build_train_network
-            <https://www.mindspore.cn/docs/en/master/api_python/amp/mindspore.amp.build_train_network.html>`_.
+            <https://www.mindspore.cn/docs/en/r2.1/api_python/amp/mindspore.amp.build_train_network.html>`_.
 
         boost_level (str): Option for argument `level` in `mindspore.boost`, level for boost mode
             training. Supports ["O0", "O1", "O2"]. Default: "O0".
