@@ -1,5 +1,18 @@
 # MindSpore Recommender Release Notes
 
+## MindSpore Recommender 0.3.0 Release Notes
+
+### 问题修复
+- 修复Embedding Cache模式缓存逐出过程偶现core dump问题。
+- 修复单机八卡GPU环境训练Wide&Deep网络，由于资源竞争导致的偶现数据处理性能劣化问题。
+
+### 贡献者
+
+感谢以下开发者做出的贡献：
+lanbingliang，lizhenyu，zhoupeichen。
+欢迎以任何形式对项目提供贡献。
+
+
 ## MindSpore Recommender 0.2.0 Release Notes
 
 ### 主要特性和增强
