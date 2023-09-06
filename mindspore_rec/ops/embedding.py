@@ -194,7 +194,10 @@ class HashEmbeddingLookup(Cell):
             weight_flatten = self.gather_revert(weight_unique, unique_idx, 0)
             out = self.reshape(weight_flatten, shape)
         else:
-            out = self.embedding_table.get(indices)
+            shape = self.shape(indices) + (self.embedding_size,)
+            indices_flatten = self.reshape_first(indices, (-1,))
+            out = self.map_tensor_get(self.embedding_table, indices_flatten)
+            out = self.reshape(out, shape)
 
         if self.max_norm is not None:
             axis = _make_axis_range(F.rank(indices), F.rank(out))
