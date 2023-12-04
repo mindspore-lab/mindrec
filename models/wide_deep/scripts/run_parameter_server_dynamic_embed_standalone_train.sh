@@ -54,6 +54,7 @@ fi
 export MS_ROLE=MS_SCHED
 rm -rf ${execute_path}/sched/
 mkdir ${execute_path}/sched/
+cp ${self_path}/../op_precision.ini ${execute_path}/sched/
 cd ${execute_path}/sched/ || exit
 python -s ${self_path}/../train_and_eval_parameter_server_standalone.py --device_target=$DEVICE_TARGET  \
        --epochs=$EPOCHS --data_path=$DATASET --parameter_server=1                                       \
@@ -66,6 +67,7 @@ for((i=0;i<$MS_SERVER_NUM;i++));
 do
   rm -rf ${execute_path}/server_$i/
   mkdir ${execute_path}/server_$i/
+  cp ${self_path}/../op_precision.ini ${execute_path}/server_$i/
   cd ${execute_path}/server_$i/ || exit
   python -s ${self_path}/../train_and_eval_parameter_server_standalone.py --device_target=$DEVICE_TARGET  \
          --epochs=$EPOCHS --data_path=$DATASET --parameter_server=1                                       \
@@ -77,6 +79,7 @@ done
 export MS_ROLE=MS_WORKER
 rm -rf ${execute_path}/worker/
 mkdir ${execute_path}/worker/
+cp ${self_path}/../op_precision.ini ${execute_path}/worker_$i/
 cd ${execute_path}/worker/ || exit
 python -s ${self_path}/../train_and_eval_parameter_server_standalone.py --device_target=$DEVICE_TARGET  \
        --epochs=$EPOCHS --data_path=$DATASET --parameter_server=1                                       \

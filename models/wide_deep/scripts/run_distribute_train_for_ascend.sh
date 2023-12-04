@@ -27,6 +27,7 @@ for((i=0;i<$RANK_SIZE;i++));
 do
   rm -rf ${execute_path}/device_$i/
   mkdir ${execute_path}/device_$i/
+  cp ${self_path}/../op_precision.ini ${execute_path}/device_$i/
   cd ${execute_path}/device_$i/ || exit
   export RANK_ID=$i
   export DEVICE_ID=$i
