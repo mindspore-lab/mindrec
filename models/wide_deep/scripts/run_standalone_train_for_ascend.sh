@@ -15,10 +15,24 @@
 # ============================================================================
 
 echo "Usage: bash run_standalone_train_for_ascend.sh EPOCHS DATASET"
-
+execute_path=$(pwd)
 self_path=$(cd "$(dirname "$0")" || exit; pwd)
+
 EPOCHS=$1
 DATASET=$2
+DEVICE_ID=$3
+
+# Set device id
+if [[ ! -n "$DEVICE_ID" ]]; then
+    export DEVICE_ID=0
+else
+    export DEVICE_ID=$DEVICE_ID
+fi
+
+rm -rf ${execute_path}/log/
+mkdir ${execute_path}/log/
+cp ${self_path}/../op_precision.ini ${execute_path}/log/
+cd ${execute_path}/log/ || exit
 
 python -s ${self_path}/../train_and_eval.py             \
     --device_target="Ascend"                            \

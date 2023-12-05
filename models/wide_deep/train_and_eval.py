@@ -41,6 +41,7 @@ class ModelBuilder():
     """
     ModelBuilder
     """
+
     def __init__(self):
         pass
 
@@ -101,6 +102,8 @@ def test_train_eval(config):
 
 
 def train_wide_and_deep():
+    if cfg.device_target == "Ascend":
+        context.set_context(ascend_config={"op_precision_mode": "op_precision.ini"})
     _enable_graph_kernel = cfg.device_target == "GPU"
     context.set_context(mode=context.GRAPH_MODE,
                         enable_graph_kernel=_enable_graph_kernel, device_target=cfg.device_target,
@@ -108,6 +111,7 @@ def train_wide_and_deep():
     if _enable_graph_kernel:
         context.set_context(graph_kernel_flags="--enable_cluster_ops=MatMul")
     test_train_eval(cfg)
+
 
 if __name__ == "__main__":
     train_wide_and_deep()

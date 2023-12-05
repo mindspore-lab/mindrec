@@ -122,6 +122,8 @@ cache_enable = cfg.vocab_cache_size > 0
 
 def train_wide_and_deep():
     """ train_wide_and_deep """
+    if cfg.device_target == "Ascend":
+        context.set_context(ascend_config={"op_precision_mode": "op_precision.ini"})
     context.set_ps_context(enable_ps=True)
     init()
 
@@ -132,6 +134,7 @@ def train_wide_and_deep():
         context.set_context(graph_kernel_flags="--enable_cluster_ops=MatMul")
 
     train_and_eval(cfg)
+
 
 if __name__ == "__main__":
     train_wide_and_deep()
