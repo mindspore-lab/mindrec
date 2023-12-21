@@ -1,3 +1,15 @@
+# Builtin Configurations(DO NOT CHANGE THESE CONFIGURATIONS unless you know exactly what you are doing)
+enable_modelarts: False
+data_url: ""
+train_url: ""
+checkpoint_url: ""
+data_path: "/cache/data"
+output_path: "/cache/train"
+load_path: "/cache/checkpoint_path"
+device_target: Ascend
+enable_profiling: False
+
+# ==============================================================================
 # argparse_init 'WideDeep'
 device_target: Ascend
 data_path: "./data/mindrecord"
